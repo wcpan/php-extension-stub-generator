@@ -9,9 +9,8 @@ use AppendIterator;
 use ArrayIterator;
 use PHPExtensionStubGenerator\ZendCode\FunctionGenerator;
 use ReflectionExtension;
-use Zend\Code\Generator\ {
-    ClassGenerator, DocBlockGenerator
-};
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Reflection\ClassReflection;
 use PHPExtensionStubGenerator\ZendCode\FunctionReflection;
 
@@ -45,7 +44,7 @@ class FilesDumper
         }
     }
 
-    protected function getGenerationTargets() : Iterator
+    protected function getGenerationTargets()
     {
         $generates = new AppendIterator();
         $generates->append(new ArrayIterator($this->generateConstants()));
@@ -56,12 +55,12 @@ class FilesDumper
     }
 
 
-    public function setDocBlockGenerator(DocBlockGenerator $docBlockGenerator) : void
+    public function setDocBlockGenerator(DocBlockGenerator $docBlockGenerator)
     {
         $this->docBlockGenerator = $docBlockGenerator;
     }
 
-    public function getDocBlockGenerator() : DocBlockGenerator
+    public function getDocBlockGenerator()
     {
         if (!$this->docBlockGenerator instanceof DocBlockGenerator) {
             $docBlockGenerator = new DocBlockGenerator('auto generated file by PHPExtensionStubGenerator');
@@ -103,7 +102,7 @@ class FilesDumper
         return $constantsFiles;
     }
 
-    public function generateClasses() : Generator
+    public function generateClasses()
     {
         /** @var \ReflectionClass $phpClassReflection */
         foreach ($this->reflectionExtension->getClasses() as $fqcn => $phpClassReflection) {
@@ -115,7 +114,7 @@ class FilesDumper
         }
     }
 
-    public function generateFunctions() : array
+    public function generateFunctions()
     {
         $functionFiles = [];
         foreach ($this->reflectionExtension->getFunctions() as $function_name => $phpFunctionReflection) {
@@ -140,7 +139,7 @@ class FilesDumper
         return $functionFiles;
     }
 
-    private static function fqcnToFilename(string $fqcn) :string 
+    private static function fqcnToFilename($fqcn)
     {
         return sprintf(static::CLASS_FILENAME, str_replace('\\', '/', $fqcn));
     }

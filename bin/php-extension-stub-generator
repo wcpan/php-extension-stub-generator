@@ -1,11 +1,9 @@
 #!/usr/bin/env php
 <?php
-use Zend\Console\ {
-    ColorInterface as Color, Prompt\Confirm
-};
-use PHPExtensionStubGenerator\ {
-    Console\FilesDumper, GeneratorDumper
-};
+use Zend\Console\ColorInterface as Color;
+use Zend\Console\Prompt\Confirm;
+use PHPExtensionStubGenerator\Console\FilesDumper;
+use PHPExtensionStubGenerator\GeneratorDumper;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
