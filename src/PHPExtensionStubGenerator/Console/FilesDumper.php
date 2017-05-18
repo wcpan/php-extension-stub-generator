@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+//declare(strict_types=1);
 
 namespace PHPExtensionStubGenerator\Console;
 
@@ -18,7 +18,7 @@ class FilesDumper extends BaseFilesDumper
         $this->console = $console;
     }
 
-    protected function getGenerationTargets() : Iterator
+    protected function getGenerationTargets()
     {
         foreach (parent::getGenerationTargets() as $file => $code) {
             $this->console->writeLine($file);

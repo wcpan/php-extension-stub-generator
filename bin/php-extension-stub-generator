@@ -12,7 +12,7 @@ PHP Extension Stub Generator.
 
 Usage:
   php-extension-stub-generator.phar dump <name>
-  php-extension-stub-generator.phar dump-files <name> <dir>
+  php-extension-stub-generator.phar dump-files  <dir>
   php-extension-stub-generator.phar (-h | --help)
   php-extension-stub-generator.phar --version
 
@@ -24,12 +24,7 @@ DOC;
 
 try {
     $console = \Zend\Console\Console::getInstance();
-    $docopt = Docopt::handle($doc, ['version'=>'PHP Extension Stub Generator 0.0.1']);
-
-    if (!extension_loaded($docopt->args['<name>'])) {
-        $console->writeLine("extension `{$docopt->args['<name>']}` is not loaded", Color::RED);
-        exit(1);
-    }
+    $docopt = Docopt::handle($doc, ['version' => 'PHP Extension Stub Generator 0.0.1']);
 
     if ($docopt->args['dump']) {
         $dumper = new GeneratorDumper(new ReflectionExtension($docopt->args['<name>']));
@@ -41,21 +36,33 @@ try {
         exit(0);
     }
     if ($docopt->args['dump-files']) {
-        if ($docopt->args['<dir>'] && file_exists($docopt->args['<dir>'])) {
-            $prompt = new Confirm("Are you sure you want to make files at `{$docopt->args['<dir>']}` ?");
-            if ($result = $prompt->show()) {
-                /** @var FilesDumper $dumper */
-                $filesDumper = new FilesDumper(new ReflectionExtension($docopt->args['<name>']), $console);
-                $filesDumper->dumpFiles($docopt->args['<dir>']);
-            } else {
-                exit(0);
+        if ($docopt->args['<dir>']) {
+            if (!file_exists($docopt->args['<dir>'])) {
+                mkdir($docopt->args['<dir>']);
+            }
+            foreach (get_loaded_extensions() as $ext_name) {
+                $ext_file_name = str_replace(" ", "_", $ext_name);
+                $ext_file_name = str_replace("!", "_", $ext_file_name);
+                $ext_file_name = str_replace("(", "_", $ext_file_name);
+                $ext_file_name = str_replace(")", "_", $ext_file_name);
+                $ext_dir_name = $docopt->args['<dir>'] . "/" . $ext_file_name;
+                if (!file_exists($ext_dir_name)) {
+                    if (!mkdir($ext_dir_name)) {
+                        $console->writeLine("dir `$ext_dir_name` is not valid", Color::RED);
+                    }
+                }
+                try {
+                    $filesDumper = new FilesDumper(new ReflectionExtension($ext_name), $console);
+                    $filesDumper->dumpFiles($ext_dir_name);
+                } catch (Exception $e) {
+                    echo '(continue) An Error has occured. ', $e->getMessage(), PHP_EOL;
+                }
             }
         } else {
-            $console->writeLine("dir `{$docopt->args['<dir>']}` is not valid", Color::RED);
             exit(1);
         }
     }
 } catch (\Exception $e) {
-    echo 'An Error has occured. ' , $e->getMessage() , PHP_EOL;
+    echo 'An Error has occured. ', $e->getMessage(), PHP_EOL;
     exit(1);
 }

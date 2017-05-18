@@ -1,14 +1,13 @@
 <?php
-declare(strict_types=1);
+//declare(strict_types=1);
 
 namespace PHPExtensionStubGenerator;
 
 use Generator;
 use PHPExtensionStubGenerator\ZendCode\FunctionGenerator;
 use ReflectionExtension;
-use Zend\Code\Generator\ {
-    ClassGenerator, DocBlockGenerator
-};
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Reflection\ClassReflection;
 use PHPExtensionStubGenerator\ZendCode\FunctionReflection;
 
@@ -26,7 +25,7 @@ class GeneratorDumper
         $this->reflectionExtension = $reflectionExtension;
     }
 
-    public function getGenerates() : Generator
+    public function getGenerates()
     {
         yield from $this->generateConstants();
         yield from $this->generateFunctions();
@@ -34,12 +33,12 @@ class GeneratorDumper
     }
 
 
-    public function setDocBlockGenerator(DocBlockGenerator $docBlockGenerator) : void
+    public function setDocBlockGenerator(DocBlockGenerator $docBlockGenerator)
     {
         $this->docBlockGenerator = $docBlockGenerator;
     }
 
-    public function getDocBlockGenerator() : DocBlockGenerator
+    public function getDocBlockGenerator()
     {
         if (!$this->docBlockGenerator instanceof DocBlockGenerator) {
             $docBlockGenerator = new DocBlockGenerator('auto generated file by PHPExtensionStubGenerator');
@@ -49,7 +48,7 @@ class GeneratorDumper
         return $this->docBlockGenerator;
     }
 
-    public function generateConstants() : Generator
+    public function generateConstants()
     {
         $reflectionConstants = $this->reflectionExtension->getConstants();
 
@@ -77,7 +76,7 @@ class GeneratorDumper
         return "";
     }
 
-    public function generateClasses() : Generator
+    public function generateClasses()
     {
         /** @var \ReflectionClass $phpClassReflection */
         foreach ($this->reflectionExtension->getClasses() as $fqcn => $phpClassReflection) {
@@ -89,7 +88,7 @@ class GeneratorDumper
         return "";
     }
 
-    public function generateFunctions() : Generator
+    public function generateFunctions()
     {
         $declaredNamespaces = [];
         foreach ($this->reflectionExtension->getFunctions() as $function_name => $phpFunctionReflection) {

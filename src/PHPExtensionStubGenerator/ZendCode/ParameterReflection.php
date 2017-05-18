@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+//declare(strict_types=1);
 
 /**
  * most of parts is borrowed from zendframework/zend-code
